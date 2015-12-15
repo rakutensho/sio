@@ -145,7 +145,10 @@ $clean3 = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean3);
 
 //define images names
 
-$prefix=$row0[0]->clienteID.'_'.$clean1.'_'.$clean2.'_'.$clean3.'_';
+$prefix=$row0[0]->clienteID.'/'.$page_id.'/';
+$prefixI=$prefix.'Iniciales/';
+$prefixM=$prefix.'Modelos/';
+$prefixR=$prefix.'Radiografias/';
 
 
 //--------------------------- Start writing page
@@ -184,7 +187,7 @@ if ($role!='subscriber'){
 		<div id="pacienteMain" style="border-right:2px dashed #5A7691; height:100%; padding-right:12px;" class="three_fourth">
 		<button class="btn btn-default" id="hideButton" onclick="hideSidebar()"></button>
 		<button class="btn btn-default" id="showButton" onclick="showSidebar()"></button>
-		<br><br><div style="float:left;"><a href=""><img src="/img.php?show=<?php echo $prefix; ?>A2" style="max-height:160px;max-width:160px;" ></a></div><div style="margin-left:160px;">
+		<br><br><div style="float:left;"><a href=""><img src="/img.php?show=<?php echo $prefixI; ?>/1/A2" style="max-height:160px;max-width:160px;" ></a></div><div style="margin-left:160px;">
 
 <?php
 		echo '<div style="display:inline-block; margin-left:15px;"><h2 style="color:#3B5998;"><b>Paciente: </b></h2><h2>   '.ucfirst($row0[0]->nombre)." ".ucfirst($row0[0]->apellido1)." ".ucfirst($row0[0]->apellido2).'<br>';
@@ -240,37 +243,22 @@ if ($role!='subscriber'){
 		?>
 
 
+<!--FOTOS INICIALES
+	PHP- contar num folders dentro de prefixI
+	PHP- crear loop for en funcion del tamaño 
+	cada paso crea una table prefixI.'/1', prefixI.'/2' ...
+	COMO SE ESCONDE Y MUESTRA??
+	bottom links basados en $i counter
+	-->
 
 <div id="galFotos">
-<table id="ttt" border="2" cellspacing="3">
-		<col width="150">
-		<col width="150">
-		<col width="150">
-		<?php 
-			$prefixA=$prefix.'A';
-			$k=0;
-			for($i=0; $i<3; $i++){
-				echo '<tr>';
-				for($j=0; $j<3; $j++){
-					$k++;
-					if($k==5){
-						$j++;
-						echo '<td class="fg_thumbnail">';
-						echo '<img src="/centerP.png"/></td>';
-					}
-					echo '<td class="fg_thumbnail">';
-					echo '<img id="" onclick="openImage(this)" src="/img.php?show='.$prefixA.$k.'"/>';
-					echo '<button class="btn btn-default btn-pencil"  onclick="cambiar('.$prefixA.$k.')" ></button></td>';
 
-				}
-				echo '</tr>';
-			}
+<button class="btn btn-default" onclick="renderGallery(<?php echo $current_user_id.', '.$page_id.', \'Iniciales\', \'1\', \'A\'';?>)">GAL</button>
 
-		?>
-	</table>
 	<button class="closeButton" onclick="closeGal()">close</button>
 </div>
-<button class="btn btn-default" onclick="showGal()">GAL</button>
+<button class="btn btn-default" onclick="previousImage()">prev</button>
+<button class="btn btn-default" onclick="nextImage()">next</button>
 
 
 
@@ -355,7 +343,7 @@ elseif ($row0[0]->pdfTratamiento==NULL){
 ?>
 <br>
 <br>
-		<details >
+		<details>
 		<summary style="padding:6px;">
 			<h2>Resumen</h2>
 		</summary><hr style="margin:6px;">

@@ -10,6 +10,7 @@
 		document.getElementById('hideButton').style.display='none';
 		document.getElementById('showButton').style.display='block';
 	}
+  //Detalles hide / show. -->Default show (only admin)
 	function showSidebar(){
 
 		var main =document.getElementById('pacienteMain');
@@ -22,7 +23,7 @@
 		document.getElementById('hideButton').style.display='block';
 	}
 
-
+//start up changing image process.
 	function cambiar(f){
 		parent.jQuery.fancybox.close();
 		document.getElementById('cambiar').style.display = "block";
@@ -46,11 +47,13 @@
 
     	document.body.appendChild(popupDimmer);
 	}
-
+//remove dimmer
 	function div_hide(){
 		document.getElementById('cambiar').style.display = "none";
 		document.body.removeChild(popupDimmer);
 	}
+
+  //fancy stuff
 function loadEstudio(){
 
 		cubre = document.createElement("div");
@@ -62,6 +65,8 @@ function loadEstudio(){
 		var cambiar = document.getElementById('cargando').style.display = "block";
 		document.body.appendChild(cubre);
 }
+//text page editor. Ajax usage on function in paciente.php
+
 function editEstado(id, editorB, val, cancel)
 {
 	var editor = document.getElementById(id);
@@ -91,6 +96,8 @@ function deleteLinea(id, num){
                	  });
 
 }
+//text page editor. Ajax usage on function in paciente.php
+
 function editCancel(id, editorB, val, cancel){
 
 	      document.execCommand('undo');
@@ -107,6 +114,7 @@ function editCancel(id, editorB, val, cancel){
 	botonCancelar.style.display="none";
 
 }
+//validate upload form  GENERAL on change individual image.
 
 function validation(thisform){
    with(thisform)
@@ -122,6 +130,9 @@ function validation(thisform){
       }
    }
 }
+
+//validate upload form  EXT on change individual image.
+
 function validateFileExtension(component,msg_id,msg,extns)
 {
    var flag=0;
@@ -155,6 +166,8 @@ function validateFileExtension(component,msg_id,msg,extns)
       }
    }
 }
+
+//validate upload form  SIZE on change individual image.
 function validateFileSize(component,maxSize,msg_id,msg)
 {
    if(navigator.appName=="Microsoft Internet Explorer")
@@ -192,6 +205,8 @@ c=-1!=c.indexOf("open")&&-1==c.indexOf('open=""')?"open":"closed";a.setAttribute
 document.createElement("span"),d=a.childNodes[b];a.insertBefore(c,d);a.removeChild(d);c.appendChild(d)}}details_shim.toggle=function(a,b){b="undefined"===typeof b?"open"==a.getAttribute("data-open")?"closed":"open":b?"open":"closed";a.setAttribute("data-open",b);a.className=a.className.replace(/\bdetails_shim_open\b|\bdetails_shim_closed\b/g," ")+" details_shim_"+b};details_shim.init=function(){for(var a=document.getElementsByTagName("summary"),b=0;b<a.length;b++)details_shim(a[b])};
 window.addEventListener?window.addEventListener("load",details_shim.init,!1):window.attachEvent&&window.attachEvent("onload",details_shim.init);
 
+
+//deprecated --> render on demand.
 function showGal(){
 
 var gal = document.getElementById("galFotos");
@@ -210,9 +225,13 @@ function openImage(e){
 
 
 	jQuery(f).appendTo(gal);
-
+var btn = document.createElement("button");
+    btn.onclick = "previousImage()";
+    jQuery(btn).appendTo(f);
 
 }
+
+//nav gallery.
 function closeGal(){
 
 	document.getElementById("ttt").style.display="block";
@@ -225,21 +244,63 @@ function closeGal(){
 }
 function previousImage(){
 		var appendedImage = document.getElementById('appendedImage');
-		 var src=jQuery(appendedImagend).attr('src');
-		var lastChar = src.substr(id.length - 1);
+		var src=jQuery(appendedImage).attr('src');
+		var lastChar = src.substr(src.length - 1);
+		
+
   if(lastChar > 1){
     lastChar--;
-    src.slice(id.length - 1);
-    jQuery(src).attr('src'+lastChar);
+    src=src.substring(0, src.length - 1);
+    jQuery(appendedImage).attr('src',src+lastChar);
     }
   }
 function nextImage(){
 		var appendedImage = document.getElementById('appendedImage');
-		 var src=jQuery(appendedImagend).attr('src');
-		var lastChar = src.substr(id.length - 1);
+		 var src=jQuery(appendedImage).attr('src');
+		var lastChar = src.substr(src.length - 1);
+		
   if(lastChar < 8){
     lastChar++;
-    src.slice(id.length - 1);
-    jQuery(src).attr('src'+lastChar);
+    src=src.substring(0, src.length - 1);
+    jQuery(appendedImage).attr('src',src+lastChar);
     }
   }
+
+//draw table based on inputs. Generate a table on each page.
+  function renderGallery(cli, pac, type, id, pref){
+
+    var body = document.getElementById('galFotos');
+    var tbl = document.createElement('table');
+    jQuery(tbl).addClass('galFotos');
+    var tbdy = document.createElement('tbody');
+    var k =0;
+for (var i=0; i<3; i++){
+        var tr = document.createElement('tr');
+        for (var j = 0; j < 3; j++) {
+          k++;
+            if (j == 5) {
+                var td = document.createElement('td');
+                jQuery(td).addClass('fg_thumbnail');
+                var img = document.createElement("img");
+                img.src = "/centerP.png";
+                td.appendChild(img);
+            } else {
+                var td = document.createElement('td');
+                jQuery(td).addClass('fg_thumbnail');
+                var img = document.createElement("img");
+                img.src = "/img.php?show="+cli+"/"+pac+"/"+type+"/"+id+"/"+pref+k;  //use args to find img
+                td.appendChild(img);
+                var button = document.createElement('button');
+                jQuery(button).addClass('btn btn-default btn-pencil');
+                td.appendChild(button);
+
+            }
+            tr.appendChild(td);
+        }
+        tbdy.appendChild(tr);
+    }
+    tbl.appendChild(tbdy);
+    body.appendChild(tbl);
+}
+
+  
